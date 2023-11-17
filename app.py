@@ -16,7 +16,7 @@ load_dotenv("./.env")
 ##### GLOBAL CONSTANTS ##########
 INDEXER_ENDPOINT=os.getenv("INDEXER_ENDPOINT")
 ALGOD_ENDPOINT=os.getenv("ALGOD_ENDPOINT")
-APP_ID=os.getenv("APP_ID")
+APP_ID=int(os.getenv("APP_ID"))
 API_KEY=os.getenv("API_KEY")
 CREATOR_ADDRESS=os.getenv("CREATOR_ADDRESS")
 TOKEN=os.getenv("TOKEN")

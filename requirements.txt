@@ -1,0 +1,5 @@
+pip install Flask
+pip3 install py-algorand-sdk
+pip install Flask-Cors
+pip install mysql-connector-python
+pip install python-dotenv
