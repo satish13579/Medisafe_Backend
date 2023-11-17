@@ -10,7 +10,7 @@ from mysql.connector import errors
 import pickle
 import hashlib,os
 from dotenv import load_dotenv
-load_dotenv("../.env")
+load_dotenv("./.env")
 
 
 ##### GLOBAL CONSTANTS ##########
