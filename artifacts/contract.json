@@ -1,0 +1,69 @@
+{
+    "name": "MEDISAFE",
+    "methods": [
+        {
+            "name": "create",
+            "args": [],
+            "returns": {
+                "type": "void"
+            }
+        },
+        {
+            "name": "account_optin",
+            "args": [
+                {
+                    "type": "string",
+                    "name": "name"
+                },
+                {
+                    "type": "string",
+                    "name": "role"
+                },
+                {
+                    "type": "string",
+                    "name": "dob"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "add_request_hash",
+            "args": [
+                {
+                    "type": "string",
+                    "name": "hash"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "add_access_hash",
+            "args": [
+                {
+                    "type": "string",
+                    "name": "hash"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "add_data_hash",
+            "args": [
+                {
+                    "type": "string",
+                    "name": "hash"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        }
+    ],
+    "networks": {}
+}

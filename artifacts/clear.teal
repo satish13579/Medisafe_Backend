@@ -1,0 +1,38 @@
+#pragma version 8
+intcblock 1
+bytecblock 0x726f6c65 0x646f63746f725f636f756e74 0x70617469656e745f636f756e74
+callsub cs_0
+intc_0 // 1
+return
+
+// cs
+cs_0:
+proto 0 0
+txn Sender
+bytec_0 // "role"
+app_local_get
+pushbytes 0x50415449454e54 // "PATIENT"
+==
+bnz cs_0_l3
+txn Sender
+bytec_0 // "role"
+app_local_get
+pushbytes 0x444f43544f52 // "DOCTOR"
+==
+bz cs_0_l4
+bytec_1 // "doctor_count"
+bytec_1 // "doctor_count"
+app_global_get
+intc_0 // 1
+-
+app_global_put
+b cs_0_l4
+cs_0_l3:
+bytec_2 // "patient_count"
+bytec_2 // "patient_count"
+app_global_get
+intc_0 // 1
+-
+app_global_put
+cs_0_l4:
+retsub

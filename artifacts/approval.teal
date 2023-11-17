@@ -1,0 +1,387 @@
+#pragma version 8
+intcblock 0 1
+bytecblock 0x 0x53756363657373 0x726f6c65 0x151f7c75 0x50415449454e54 0x646f63746f725f636f756e74 0x70617469656e745f636f756e74 0x7265636f7264735f697373756564 0x30 0x596f752043616e2774204163636573732054686973204d6574686f64 0x444f43544f52 0x444f42 0x6e616d65 0x726571756573745f68617368 0x6163636573735f68617368 0x646174615f68617368
+txna ApplicationArgs 0
+pushbytes 0x4c5c61ba // "create()void"
+==
+bnz main_l10
+txna ApplicationArgs 0
+pushbytes 0xfc78c3b4 // "account_optin(string,string,string)string"
+==
+bnz main_l9
+txna ApplicationArgs 0
+pushbytes 0x945747d8 // "add_request_hash(string)string"
+==
+bnz main_l8
+txna ApplicationArgs 0
+pushbytes 0x546cdb30 // "add_access_hash(string)string"
+==
+bnz main_l7
+txna ApplicationArgs 0
+pushbytes 0xcab39905 // "add_data_hash(string)string"
+==
+bnz main_l6
+err
+main_l6:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+txna ApplicationArgs 1
+callsub adddatahash_5
+store 6
+bytec_3 // 0x151f7c75
+load 6
+concat
+log
+intc_1 // 1
+return
+main_l7:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+txna ApplicationArgs 1
+callsub addaccesshash_4
+store 5
+bytec_3 // 0x151f7c75
+load 5
+concat
+log
+intc_1 // 1
+return
+main_l8:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+txna ApplicationArgs 1
+callsub addrequesthash_3
+store 4
+bytec_3 // 0x151f7c75
+load 4
+concat
+log
+intc_1 // 1
+return
+main_l9:
+txn OnCompletion
+intc_1 // OptIn
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+txna ApplicationArgs 1
+store 0
+txna ApplicationArgs 2
+store 1
+txna ApplicationArgs 3
+store 2
+load 0
+load 1
+load 2
+callsub accountoptin_2
+store 3
+bytec_3 // 0x151f7c75
+load 3
+concat
+log
+intc_1 // 1
+return
+main_l10:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+==
+&&
+assert
+callsub create_1
+intc_1 // 1
+return
+
+// prefix_key_gen
+prefixkeygen_0:
+proto 1 1
+pushbytes 0x72657365727665645f6c6f63616c5f76616c7565 // "reserved_local_value"
+frame_dig -1
+concat
+retsub
+
+// create
+create_1:
+proto 0 0
+bytec 5 // "doctor_count"
+intc_0 // 0
+app_global_put
+bytec 6 // "patient_count"
+intc_0 // 0
+app_global_put
+bytec 7 // "records_issued"
+intc_0 // 0
+app_global_put
+retsub
+
+// account_optin
+accountoptin_2:
+proto 3 1
+bytec_0 // ""
+frame_dig -2
+extract 2 0
+bytec 4 // "PATIENT"
+==
+frame_dig -2
+extract 2 0
+bytec 10 // "DOCTOR"
+==
+||
+bnz accountoptin_2_l5
+pushbytes 0x526f6c65204d757374204265204f6e6c792050617469656e74206f7220446f63746f72 // "Role Must Be Only Patient or Doctor"
+frame_bury 0
+frame_dig 0
+len
+itob
+extract 6 0
+frame_dig 0
+concat
+frame_bury 0
+accountoptin_2_l2:
+frame_dig 0
+extract 2 0
+bytec_1 // "Success"
+==
+bnz accountoptin_2_l4
+intc_0 // 0
+return
+accountoptin_2_l4:
+intc_1 // 1
+return
+accountoptin_2_l5:
+txn Sender
+bytec 11 // "DOB"
+bytec_0 // ""
+app_local_put
+txn Sender
+bytec 12 // "name"
+bytec_0 // ""
+app_local_put
+txn Sender
+bytec_2 // "role"
+bytec_0 // ""
+app_local_put
+txn Sender
+bytec 12 // "name"
+frame_dig -3
+extract 2 0
+app_local_put
+txn Sender
+bytec_2 // "role"
+frame_dig -2
+extract 2 0
+app_local_put
+txn Sender
+bytec 11 // "DOB"
+frame_dig -1
+extract 2 0
+app_local_put
+frame_dig -2
+extract 2 0
+bytec 4 // "PATIENT"
+==
+bnz accountoptin_2_l8
+txn Sender
+bytec 13 // "request_hash"
+callsub prefixkeygen_0
+bytec 8 // "0"
+app_local_put
+bytec 5 // "doctor_count"
+bytec 5 // "doctor_count"
+app_global_get
+intc_1 // 1
++
+app_global_put
+accountoptin_2_l7:
+bytec_1 // "Success"
+frame_bury 0
+frame_dig 0
+len
+itob
+extract 6 0
+frame_dig 0
+concat
+frame_bury 0
+b accountoptin_2_l2
+accountoptin_2_l8:
+txn Sender
+bytec 14 // "access_hash"
+callsub prefixkeygen_0
+bytec 8 // "0"
+app_local_put
+txn Sender
+bytec 15 // "data_hash"
+callsub prefixkeygen_0
+bytec 8 // "0"
+app_local_put
+bytec 6 // "patient_count"
+bytec 6 // "patient_count"
+app_global_get
+intc_1 // 1
++
+app_global_put
+b accountoptin_2_l7
+
+// add_request_hash
+addrequesthash_3:
+proto 1 1
+bytec_0 // ""
+txn Sender
+global CurrentApplicationID
+app_opted_in
+// unauthorized
+assert
+txn Sender
+bytec_2 // "role"
+app_local_get
+bytec 10 // "DOCTOR"
+==
+bnz addrequesthash_3_l2
+bytec 9 // "You Can't Access This Method"
+frame_bury 0
+frame_dig 0
+len
+itob
+extract 6 0
+frame_dig 0
+concat
+frame_bury 0
+intc_0 // 0
+return
+addrequesthash_3_l2:
+txn Sender
+bytec 13 // "request_hash"
+callsub prefixkeygen_0
+frame_dig -1
+extract 2 0
+app_local_put
+bytec_1 // "Success"
+frame_bury 0
+frame_dig 0
+len
+itob
+extract 6 0
+frame_dig 0
+concat
+frame_bury 0
+intc_1 // 1
+return
+
+// add_access_hash
+addaccesshash_4:
+proto 1 1
+bytec_0 // ""
+txn Sender
+global CurrentApplicationID
+app_opted_in
+// unauthorized
+assert
+txn Sender
+bytec_2 // "role"
+app_local_get
+bytec 4 // "PATIENT"
+==
+bnz addaccesshash_4_l2
+bytec 9 // "You Can't Access This Method"
+frame_bury 0
+frame_dig 0
+len
+itob
+extract 6 0
+frame_dig 0
+concat
+frame_bury 0
+intc_0 // 0
+return
+addaccesshash_4_l2:
+txn Sender
+bytec 14 // "access_hash"
+callsub prefixkeygen_0
+frame_dig -1
+extract 2 0
+app_local_put
+bytec_1 // "Success"
+frame_bury 0
+frame_dig 0
+len
+itob
+extract 6 0
+frame_dig 0
+concat
+frame_bury 0
+intc_1 // 1
+return
+
+// add_data_hash
+adddatahash_5:
+proto 1 1
+bytec_0 // ""
+txn Sender
+global CurrentApplicationID
+app_opted_in
+// unauthorized
+assert
+txn Sender
+bytec_2 // "role"
+app_local_get
+bytec 4 // "PATIENT"
+==
+bnz adddatahash_5_l2
+bytec 9 // "You Can't Access This Method"
+frame_bury 0
+frame_dig 0
+len
+itob
+extract 6 0
+frame_dig 0
+concat
+frame_bury 0
+intc_0 // 0
+return
+adddatahash_5_l2:
+txn Sender
+bytec 15 // "data_hash"
+callsub prefixkeygen_0
+frame_dig -1
+extract 2 0
+app_local_put
+bytec_1 // "Success"
+frame_bury 0
+frame_dig 0
+len
+itob
+extract 6 0
+frame_dig 0
+concat
+frame_bury 0
+bytec 7 // "records_issued"
+bytec 7 // "records_issued"
+app_global_get
+intc_1 // 1
++
+app_global_put
+intc_1 // 1
+return
